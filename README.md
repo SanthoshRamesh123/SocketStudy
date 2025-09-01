@@ -1,4 +1,4 @@
-# Ex.No:1a  			Study of Socket Programming
+# Ex.No:1a Study of Socket Programming
 
 ## Aim: 
 To perform a study on Socket Programming
@@ -56,34 +56,37 @@ Socket programming finds applications in various domains, including web developm
 ## Program :
 
  ## Client.py
-~~~
+ ~~~
 import socket
-from datetime import datetime
-s=socket.socket()
-s.bind(('localhost',8000))
-s.listen(5)
-c,addr=s.accept()
-print("Client Address : ",addr)
-now = datetime.now()
-c.send(now.strftime("%d/%m/%Y %H:%M:%S").encode())
-ack=c.recv(1024).decode()
-if ack:
- print(ack)
-c.close()
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect(('localhost', 8000))
+print(f"Client connected from: {client_socket.getsockname()}")
+server_message = client_socket.recv(1024).decode()
+print(f"Received from server: {server_message}")
+client_socket.send("Acknowledgement received from the client.".encode())
+client_socket.close()
 ~~~
 
 ## server.py
 ~~~
 import socket
-s=socket.socket()
-s.connect(('localhost',8000))
-print(s.getsockname())
-print(s.recv(1024).decode())
-s.send("acknowledgement recived from the server".encode())
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 8000))
+server_socket.listen(1)
+print("Server is waiting for a connection...")
+conn, addr = server_socket.accept()
+print(f"Connected by {addr}")
+conn.send("Hello from the server!".encode())
+data = conn.recv(1024)
+print(f"Received from client: {data.decode()}")
+conn.close()
+server_socket.close()
 ~~~
 
 ## Output :
-![ex 1a output](https://github.com/user-attachments/assets/6d98a9f0-cce1-4e13-af73-0620f267d551)
+<img width="1919" height="1199" alt="Screenshot 2025-09-01 160159" src="https://github.com/user-attachments/assets/dc567540-088b-47af-bdbe-b3f05142eaea" />
+
+<img width="1918" height="1199" alt="Screenshot 2025-09-01 160211" src="https://github.com/user-attachments/assets/5afbd10a-c492-4d81-a360-2570ea072b78" />
 
 
 ## Result:
